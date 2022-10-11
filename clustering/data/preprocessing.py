@@ -5,7 +5,7 @@ from pathlib import Path
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OrdinalEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from scipy.io import arff
 
 from clustering.path_definitions import RAW_DATA_PATH, PROCESSED_DATA_PATH
@@ -38,7 +38,7 @@ def standardization(df: pd.DataFrame) -> np.ndarray:
     cat_features = df.select_dtypes(exclude=np.number).columns
     cat_transformer = Pipeline(steps=[
         ('replace_nan', SimpleImputer(strategy='most_frequent')),
-        ('encoder', OrdinalEncoder())])
+        ('encoder', OneHotEncoder())])
 
     ct = ColumnTransformer(
         transformers=[
@@ -71,5 +71,5 @@ def preprocessing(data_name: str, save: bool = True) -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    DATASET_PATH = ['heart-c.arff', 'wine.arff', 'audiology.arff']
+    DATASET_PATH = ['vowel.arff', 'pen-based.arff', 'mushroom.arff']
     PROCESSED_DATASETS = [preprocessing(name) for name in DATASET_PATH]
