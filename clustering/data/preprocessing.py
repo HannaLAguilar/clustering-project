@@ -19,7 +19,7 @@ def string_decode(df: pd.DataFrame):
 
 
 def import_data(p: Union[Path, str]) -> Tuple[pd.DataFrame,
-                                              arff.arffread.MetaData]:
+                                                          arff.arffread.MetaData]:
     data, meta = arff.loadarff(p)
     df = pd.DataFrame(data)
     df = string_decode(df)
@@ -56,13 +56,13 @@ def standardization(df: pd.DataFrame, columns=None) -> pd.DataFrame:
     # dataset cases
     # case 1: categorical and numerical features
     if len(cat_features) != 0 and len(num_features) != 0:
-        columns_encoder = ct.transformers_[1][1]['encoder'].\
+        columns_encoder = ct.transformers_[1][1]['encoder']. \
             get_feature_names_out(cat_features)
         columns = num_features.union(pd.Index(columns_encoder), sort=False)
 
     # case 2: only categorical features
     elif len(cat_features) != 0 and len(num_features) == 0:
-        columns = ct.transformers_[1][1]['encoder'].\
+        columns = ct.transformers_[1][1]['encoder']. \
             get_feature_names_out(cat_features)
         columns = pd.Index(columns)
         X_trans = X_trans.toarray()
@@ -91,11 +91,12 @@ def preprocessing(data_name: str, save: bool = True) -> pd.DataFrame:
         print(f'There is nulls values: {nulls}')
     else:
         print(f'Nan values: 0')
-
     process_df = standardization(df)
+
     # Save
     if save:
-        process_df.to_csv(PROCESSED_DATA_PATH / data_name)
+        data_name_csv = f'{data_name.split(".")[0]}.csv'
+        process_df.to_csv(PROCESSED_DATA_PATH / data_name_csv)
     return process_df
 
 
