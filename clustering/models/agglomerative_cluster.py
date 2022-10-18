@@ -2,10 +2,8 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
-from sklearn.model_selection import GridSearchCV
 from sklearn.cluster import AgglomerativeClustering
 
-from clustering.data.preprocessing import import_data
 from clustering.path_definitions import PROCESSED_DATA_PATH
 
 
@@ -25,7 +23,7 @@ def hyperparameter_clustering(df: pd.DataFrame,
 
 
 p = PROCESSED_DATA_PATH / 'vowel.csv'
-vowel_df = pd.read_csv(p)
+vowel_df = pd.read_csv(p,  index_col=0)
 
 params = {'affinity': ['euclidean', 'manhattan', 'cosine'],
           'linkage': ['single', 'complete', 'average', ]}
