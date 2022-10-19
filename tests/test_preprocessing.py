@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from clustering.data import preprocessing
+from clustering.get_data import preprocessing
 from clustering.path_definitions import RAW_DATA_PATH, PROCESSED_DATA_PATH
 
 
