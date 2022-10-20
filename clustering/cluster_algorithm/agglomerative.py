@@ -1,14 +1,14 @@
+from time import time
 from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
-from time import time
 
 from sklearn.cluster import AgglomerativeClustering
 from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
 
 from clustering.path_definitions import PROCESSED_DATA_PATH
-from clustering.visualization import visualize
+
 
 # Internal metrics
 INTERNAL_METRICS = {'calinski': metrics.calinski_harabasz_score,
@@ -26,8 +26,12 @@ EXTERNAL_METRICS = {'ARI': metrics.adjusted_rand_score,
 def hyperparameter_clustering(X: np.ndarray,
                               y_true_num: np.ndarray,
                               parameters: Dict,
-                              internal_metrics: Dict = INTERNAL_METRICS.values(),
-                              external_metrics: Dict = EXTERNAL_METRICS.values()):
+                              internal_metrics: Dict =
+                              INTERNAL_METRICS.values(),
+                              external_metrics: Dict =
+                              EXTERNAL_METRICS.values()) -> \
+        Tuple[List, List, float]:
+
     t0 = time()
     agglo_clustering = []
     da = []
@@ -56,21 +60,27 @@ def hyperparameter_clustering(X: np.ndarray,
 
 
 def main(data_name: str, n_clusters, save: bool = True):
+    # Data
     path = PROCESSED_DATA_PATH / data_name
     df = pd.read_csv(path, index_col=0)
     X = df.iloc[:, :-1]
     y_true = df['y_true']
     le = LabelEncoder().fit(y_true.values)
     y_true_num = le.transform(y_true)
+
+    # Parameters for cluster
     params = {'affinity': ['euclidean', 'cosine'],
               'linkage': ['single', 'complete', 'average'],
               'n_clusters': n_clusters}
 
+    # Perform sensitive analysis
     da = hyperparameter_clustering(X, y_true_num, params)
     metric_data, clus, global_time = da
     columns = ['time', 'affinity', 'linkage', 'n_clusters']
     columns = columns + list(INTERNAL_METRICS.keys()) + list(
         EXTERNAL_METRICS.keys())
+
+    # Metric dataset
     metric_df = pd.DataFrame(metric_data, columns=columns)
 
     if save:
@@ -80,6 +90,6 @@ def main(data_name: str, n_clusters, save: bool = True):
 
 
 if __name__ == '__main__':
-    DATASET_NAME = 'iris.csv'
-    N_CLUSTERS = list(range(2, 7, 1))
+    DATASET_NAME = 'pen-based.csv'
+    N_CLUSTERS = list(range(5, 16, 1))
     METRICS_DF, GLOBAL_TIME = main(DATASET_NAME, N_CLUSTERS)
