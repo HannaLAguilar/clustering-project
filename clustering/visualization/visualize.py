@@ -1,19 +1,19 @@
-import seaborn as sns
+from typing import List, Optional, Dict, Tuple, Union
+import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import make_blobs
+import seaborn as sns
 
-k = 4
-X, y = make_blobs(n_samples=3000,
-                  n_features=2,
-                  centers=k,
-                  cluster_std=0.6,
-                  random_state=0)
 
-plt.figure()
-sns.scatterplot(x=X[:, 0],
-                y=X[:, 1],
-                hue=y,
-                palette=sns.color_palette("Spectral", k),
-                edgecolor='k',
-                legend=False)
-plt.show()
+def plot_internal_index(n_clusters: List,
+                        index_values: Union[List, np.ndarray],
+                        title: Optional[str],
+                        index_name: str):
+    plt.figure(),
+    plt.title(title)
+    plt.plot(n_clusters,
+             index_values,
+             '--bo',
+             alpha=0.6,
+             markersize=8)
+    plt.xlabel('n cluster')
+    plt.ylabel(f'{index_name} index')
