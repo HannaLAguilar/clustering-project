@@ -1,12 +1,14 @@
-import numpy as np
-import pandas as pd
-from sklearn.cluster import MeanShift, estimate_bandwidth
-from clustering.path_definitions import PROCESSED_DATA_PATH
 from time import time
 from typing import Dict, List, Tuple
+import numpy as np
+import pandas as pd
 
+from sklearn.cluster import AgglomerativeClustering
 from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
+
+from clustering.path_definitions import PROCESSED_DATA_PATH
+
 
 # Internal metrics
 INTERNAL_METRICS = {'calinski': metrics.calinski_harabasz_score,
@@ -33,34 +35,25 @@ def hyperparameter_clustering(X: np.ndarray,
     t0 = time()
     agglo_clustering = []
     da = []
-    params_combs = list(itertools.product(*list(parameters.values())))
-    # ind_params = {}
-    for param_comb in params_combs:
-        # for index, param in enumerate(list(parameters.keys())):
-        #     ind_params[param] = param_comb[index]
-        t0 = time()
-
-        # Perform clustering
-        bandwidth = estimate_bandwidth(X, quantile=param_comb[0], n_samples=param_comb[1], random_state=param_comb[2], n_jobs=param_comb[3])
-
-        ms = MeanShift(bin_seeding=param_comb[4], n_jobs=param_comb[3])
-        ms.fit(X)
-        labels = ms.labels_
-        cluster_centers = ms.cluster_centers_
-        labels_unique = np.unique(labels)
-        n_clusters_ = len(labels_unique)
-
-        tf = time() - t0
-        agglo_clustering.append(clustering)
-        # Save in a list
-        result = [tf, ms.labels_, ms.cluster_centers_, k]
-        # Internal index metrics
-        result += [m(X, clustering.labels_)
-                   for m in internal_metrics]
-        # External index metrics
-        result += [m(y_true_num, clustering.labels_)
-                   for m in external_metrics]
-        da.append(result)
+    for affinity in parameters['affinity']:
+        for linkage in parameters['linkage']:
+            for k in parameters['n_clusters']:
+                t0 = time()
+                # Perform clustering
+                clustering = AgglomerativeClustering(n_clusters=k,
+                                                     affinity=affinity,
+                                                     linkage=linkage).fit(X)
+                tf = time() - t0
+                agglo_clustering.append(clustering)
+                # Save in a list
+                result = [tf, affinity, linkage, k]
+                # Internal index metrics
+                result += [m(X, clustering.labels_)
+                           for m in internal_metrics]
+                # External index metrics
+                result += [m(y_true_num, clustering.labels_)
+                           for m in external_metrics]
+                da.append(result)
 
     func_time = time() - t0
     return da, agglo_clustering, func_time

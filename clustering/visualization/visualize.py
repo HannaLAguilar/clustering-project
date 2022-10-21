@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+from itertools import cycle
 
 def plot_internal_index(df: pd.DataFrame,
                         k_real: int,
@@ -30,3 +31,22 @@ def plot_internal_index(df: pd.DataFrame,
     fig.tight_layout()
     return fig
 
+def visualize_clustering(X, n_clusters, cluster_centers, labels):
+    plt.figure(1)
+    plt.clf()
+
+    colors = cycle("bgrcmykbgrcmykbgrcmykbgrcmyk")
+    for k, col in zip(range(n_clusters), colors):
+        my_members = labels == k
+        cluster_center = cluster_centers[k]
+        plt.plot(X[my_members, 0], X[my_members, 1], col + ".")
+        plt.plot(
+            cluster_center[0],
+            cluster_center[1],
+            "o",
+            markerfacecolor=col,
+            markeredgecolor="k",
+            markersize=14,
+        )
+    plt.title("Estimated number of clusters: %d" % n_clusters)
+    plt.show()
