@@ -1,13 +1,19 @@
 import numpy as np
 import pandas as pd
+import itertools
+
+import sys
+sys.path.append('C:/Users/mario/Github/UPC/IML - Introduction to Machine Learning/Work 1 - Clustering Excercise/')
+
+
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from clustering.path_definitions import PROCESSED_DATA_PATH
+from clustering.get_data.preprocessing import import_data
 from time import time
 from typing import Dict, List, Tuple
 
 from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
-
 # Internal metrics
 INTERNAL_METRICS = {'calinski': metrics.calinski_harabasz_score,
                     'davies': metrics.davies_bouldin_score,
@@ -31,72 +37,79 @@ def hyperparameter_clustering(X: np.ndarray,
         Tuple[List, List, float]:
 
     t0 = time()
-    agglo_clustering = []
+    MS_clustering = []
     da = []
     params_combs = list(itertools.product(*list(parameters.values())))
-    # ind_params = {}
+    param = {}
     for param_comb in params_combs:
-        # for index, param in enumerate(list(parameters.keys())):
-        #     ind_params[param] = param_comb[index]
+        for index, p in enumerate(list(parameters.keys())):
+            param[p] = param_comb[index]
         t0 = time()
 
         # Perform clustering
-        bandwidth = estimate_bandwidth(X, quantile=param_comb[0], n_samples=param_comb[1], random_state=param_comb[2], n_jobs=param_comb[3])
+        bandwidth = estimate_bandwidth(X, quantile=param['quantile'], n_samples=param['n_samples'], random_state=param['random_state'], n_jobs=param['n_jobs'])
 
-        ms = MeanShift(bin_seeding=param_comb[4], n_jobs=param_comb[3])
-        ms.fit(X)
-        labels = ms.labels_
-        cluster_centers = ms.cluster_centers_
-        labels_unique = np.unique(labels)
-        n_clusters_ = len(labels_unique)
-
+        clustering = MeanShift(bandwidth=bandwidth, bin_seeding=param['bin_seeding'], n_jobs=param['n_jobs'])
+        clustering.fit(X)
+        labels = clustering.labels_
         tf = time() - t0
-        agglo_clustering.append(clustering)
+
+        print('Bandwidth: ', bandwidth)
+        print('Clusters_centers: ', clustering.cluster_centers_)
+        print('Labels: ', clustering.labels_)
+        print('N_iter: ', clustering.n_iter_)
+        print('N_Features: ', clustering.n_features_in_)
+
+        # MS_clustering.append(clustering.labels_)
         # Save in a list
-        result = [tf, ms.labels_, ms.cluster_centers_, k]
+        # result = [clustering,tf, *param_comb]
         # Internal index metrics
-        result += [m(X, clustering.labels_)
-                   for m in internal_metrics]
-        # External index metrics
-        result += [m(y_true_num, clustering.labels_)
-                   for m in external_metrics]
-        da.append(result)
+        # result += [m(X, clustering.labels_)
+        #            for m in internal_metrics]
+        # # External index metrics
+        # result += [m(y_true_num, clustering.labels_)
+        #            for m in external_metrics]
+        # da.append(result)
 
     func_time = time() - t0
-    return da, agglo_clustering, func_time
+    return da, MS_clustering, func_time
 
 
-def main(data_name: str, n_clusters, save: bool = True):
+def main(data_name: str, save: bool = True):
     # Data
-    path = PROCESSED_DATA_PATH / data_name
-    df = pd.read_csv(path, index_col=0)
+    # path = PROCESSED_DATA_PATH / data_name
+    # df = pd.read_csv(path, index_col=0)
+    df, _ = import_data('../../data/raw/pen-based.arff')
     X = df.iloc[:, :-1]
-    y_true = df['y_true']
+    # y_true = df['y_true']
+    y_true = df['a17']
     le = LabelEncoder().fit(y_true.values)
     y_true_num = le.transform(y_true)
 
     # Parameters for cluster
-    params = {'affinity': ['euclidean', 'cosine'],
-              'linkage': ['single', 'complete', 'average'],
-              'n_clusters': n_clusters}
+    params = {'quantile': [0.5],
+              'n_samples': [X.shape[0]],
+              'random_state': [None],
+              'n_jobs':[None],
+              'bin_seeding':[False]}
+    print('X_shape: ',X.shape)
 
     # Perform sensitive analysis
     da = hyperparameter_clustering(X, y_true_num, params)
-    metric_data, clus, global_time = da
-    columns = ['time', 'affinity', 'linkage', 'n_clusters']
-    columns = columns + list(INTERNAL_METRICS.keys()) + list(
-        EXTERNAL_METRICS.keys())
+    # metric_data, clus, global_time = da
+    # columns = ['time', 'affinity', 'linkage', 'n_clusters']
+    # columns = columns + list(INTERNAL_METRICS.keys()) + list(
+    #     EXTERNAL_METRICS.keys())
+    #
+    # # Metric dataset
+    # metric_df = pd.DataFrame(metric_data, columns=columns)
+    #
+    # if save:
+    #     metric_df.to_csv(PROCESSED_DATA_PATH / f'agglo_results_{data_name}')
 
-    # Metric dataset
-    metric_df = pd.DataFrame(metric_data, columns=columns)
-
-    if save:
-        metric_df.to_csv(PROCESSED_DATA_PATH / f'agglo_results_{data_name}')
-
-    return metric_df, global_time
+    return y_true, le # metric_df, global_time
 
 
 if __name__ == '__main__':
-    DATASET_NAME = 'pen-based.csv'
-    N_CLUSTERS = list(range(5, 16, 1))
-    METRICS_DF, GLOBAL_TIME = main(DATASET_NAME, N_CLUSTERS)
+    DATASET_NAME = 'vowel.csv'
+    METRICS_DF, GLOBAL_TIME = main(DATASET_NAME)
