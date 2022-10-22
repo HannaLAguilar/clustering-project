@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from collections import namedtuple
 
-from clustering.path_definitions import PROCESSED_DATA_PATH
 
 # Result class
 Results = namedtuple('Results', 'labels centers inertia')
@@ -112,13 +111,7 @@ def kmeans(n_clusters: int,
             results = Results(labels=labels,
                               centers=centers,
                               inertia=inertia)
-
-    print(f'Best attempt {best_attempt + 1}')
+    if verbose:
+        print(f'Best attempt {best_attempt + 1}')
 
     return results
-
-
-p = PROCESSED_DATA_PATH / 'iris.csv'
-dff = pd.read_csv(p, index_col=0)
-X = dff.iloc[:, :-1].values
-a = kmeans(3, X, verbose=True)

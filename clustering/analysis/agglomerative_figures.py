@@ -1,5 +1,6 @@
 import pandas as pd
 
+from clustering.analysis import definitions
 from clustering.path_definitions import PROCESSED_DATA_PATH, ROOT_PATH
 from clustering.visualization import visualize
 
@@ -7,9 +8,9 @@ from clustering.visualization import visualize
 PATH_REPORT_FIGURES = ROOT_PATH / 'reports/figures'
 
 if __name__ == '__main__':
-    data_name = 'pen-based.csv'
+    data_name = 'iris.csv'
     dataset_name = data_name.split('.')[0]
-    n_classes = 10
+    n_classes = definitions.n_iris_real
     df = pd.read_csv(PROCESSED_DATA_PATH / f'agglo_results_{data_name}',
                      index_col=0)
 
