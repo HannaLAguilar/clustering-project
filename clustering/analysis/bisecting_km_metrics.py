@@ -106,7 +106,7 @@ if __name__ == '__main__':
         #                         f'{title}_results_{dataset_name}',
         #                         index_col=0)
 
-        # Internal
+        # Internal index
         fig1 = visualize.plot_internal_index(METRIC_DF,
                                              n_real_class,
                                              title)

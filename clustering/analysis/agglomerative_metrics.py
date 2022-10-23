@@ -1,18 +1,16 @@
-from tqdm import tqdm
 from time import time
 from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
 from sklearn.cluster import AgglomerativeClustering
-from sklearn.preprocessing import LabelEncoder
 
 from clustering.analysis import definitions
 from clustering.path_definitions import PROCESSED_DATA_PATH
 
 
 def hyperparameter_clustering(X: np.ndarray,
-                              y_true_num: np.ndarray,
+                              y_true: np.ndarray,
                               parameters: Dict,
                               internal_metrics: Dict =
                               definitions.INTERNAL_METRICS.values(),
@@ -38,7 +36,7 @@ def hyperparameter_clustering(X: np.ndarray,
                 result += [m(X, clustering.labels_)
                            for m in internal_metrics]
                 # External index metrics
-                result += [m(y_true_num, clustering.labels_)
+                result += [m(y_true, clustering.labels_)
                            for m in external_metrics]
                 da.append(result)
 
@@ -46,14 +44,14 @@ def hyperparameter_clustering(X: np.ndarray,
     return da, agglo_clustering, func_time
 
 
-def main(data_name: str, n_clusters, save: bool = True):
+def get_metric_dataset(data_name: str,
+                       n_clusters: int,
+                       save: bool = True):
     # Data
     path = PROCESSED_DATA_PATH / data_name
     df = pd.read_csv(path, index_col=0)
     X = df.iloc[:, :-1].values
     y_true = df['y_true']
-    le = LabelEncoder().fit(y_true.values)
-    y_true_num = le.transform(y_true)
 
     # Parameters for cluster
     params = {'affinity': ['euclidean', 'cosine'],
@@ -61,7 +59,7 @@ def main(data_name: str, n_clusters, save: bool = True):
               'n_clusters': n_clusters}
 
     # Perform sensitive analysis
-    da = hyperparameter_clustering(X, y_true_num, params)
+    da = hyperparameter_clustering(X, y_true, params)
     metric_data, clus, global_time = da
     columns = ['time', 'affinity', 'linkage', 'n_clusters']
     columns = columns + list(definitions.INTERNAL_METRICS.keys()) + list(
@@ -91,4 +89,4 @@ if __name__ == '__main__':
     for dataset_name, n_clusters in zip(DATASET_NAME,
                                         N_CLUSTERS_RANGE):
         print(f'Processing metrics for {dataset_name} dataset')
-        main(dataset_name, n_clusters)
+        get_metric_dataset(dataset_name, n_clusters)
