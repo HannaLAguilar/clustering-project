@@ -7,9 +7,9 @@ from clustering.visualization import visualize
 PATH_REPORT_FIGURES = ROOT_PATH / 'reports/figures'
 
 
-def main(dataset_name: str):
+def main(dataset_name: str,
+         n_real_class: int):
     raw_name = dataset_name.split('.')[0]
-    n_classes = definitions.n_iris_real
     df = pd.read_csv(PROCESSED_DATA_PATH / f'agglo_results_{dataset_name}',
                      index_col=0)
 
@@ -24,7 +24,7 @@ def main(dataset_name: str):
                          & (df['linkage'] == case[1])]
 
             # Internal index
-            fig1 = visualize.plot_internal_index(case_df, n_classes, title)
+            fig1 = visualize.plot_internal_index(case_df, n_real_class, title)
             fig1.savefig(PATH_REPORT_FIGURES /
                          f'{raw_name}_{case[0]}_{case[1]}_internal.png')
 
@@ -41,4 +41,10 @@ if __name__ == '__main__':
                     'cmc.csv',
                     'pen-based.csv']
 
-    [main(name) for name in DATASET_NAME]
+    CLASS_REAL = [definitions.n_iris_real,
+                  definitions.n_vowel_real,
+                  definitions.n_cmc_real,
+                  definitions.n_pen_real]
+
+    [main(name, n_real_class)
+     for name, n_real_class in zip(DATASET_NAME, CLASS_REAL)]
