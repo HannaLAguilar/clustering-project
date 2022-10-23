@@ -28,7 +28,7 @@ def plot_internal_index(df: pd.DataFrame,
                     alpha=0.6,
                     markersize=8)
         axs[i].set_xlabel('n cluster')
-        axs[i].set_ylabel(f'{ylbales[i]} index')
+        axs[i].set_ylabel(f'{ylbales[i]}')
         axs[i].axvline(k_real, c='r', linewidth=2,
                        alpha=0.7, label='True n_clusters')
         axs[i].legend()
@@ -38,7 +38,7 @@ def plot_internal_index(df: pd.DataFrame,
 
 def plot_external_index(df: pd.DataFrame,
                         title: Optional[str] = None):
-    n_clusters = df['n_clusters']
+
     external_indexs = ['ARI', 'AMI', 'homo', 'compl', 'v-measure']
     ylabels = ['Adjusted Rand-Index',
                'Adjusted Mutual',
