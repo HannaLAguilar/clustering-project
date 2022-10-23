@@ -35,6 +35,7 @@ Project Organization
     │   │
     │   ├── get_data       <- Scripts  to preprocessing data
     │   │   └── preprocessing.py
+    │   │   ├── data_pca_figures.py
     │   │
     │   ├── cluster_algorithm    <- Scripts to cluster algorithms from scratch 
     │   │   │                 
