@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans
-from clustering.cluster_algorithm.kmeans import kmeans, squared_dist, Results, \
-    get_inertia
-from clustering.path_definitions import PROCESSED_DATA_PATH
+
+from clustering.cluster_algorithm.kmeans import kmeans, squared_dist, Results
 
 
 def inertia_per_cluster(X: np.ndarray,
@@ -80,11 +78,3 @@ def bisecting_kmeans(n_clusters: int,
     return Results(labels=final_df.labels,
                    centers=centers,
                    inertia=inertia)
-
-
-# dff = pd.read_csv(PROCESSED_DATA_PATH / 'iris.csv', index_col=0)
-# XX_df = dff.iloc[:, :-1]
-# K = 5
-# d = {}
-#
-# a = bisecting_kmeans(K, XX_df)
