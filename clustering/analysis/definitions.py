@@ -14,9 +14,9 @@ EXTERNAL_METRICS = {'ARI': metrics.adjusted_rand_score,
 
 
 # N_cluster range for every dataset
-n_clusters_iris = list(range(2, 7, 1))
+n_clusters_iris = list(range(2, 11, 1))
 n_clusters_vowel = list(range(2, 16, 1))
-n_clusters_cmc = list(range(2, 10, 1))
+n_clusters_cmc = list(range(2, 11, 1))
 n_clusters_pen = list(range(7, 16, 1))
 
 # Real number of class

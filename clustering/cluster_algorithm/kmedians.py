@@ -1,38 +1,15 @@
-from typing import Union, List
 import numpy as np
 import pandas as pd
-from collections import namedtuple
+
+from clustering.cluster_algorithm.kmeans import (distance_matrix,
+                                                 get_inertia, Results)
 
 
-# Result class
-Results = namedtuple('Results', 'labels centers inertia')
-
-
-def squared_dist(a: np.ndarray, b: np.ndarray) -> float:
-    return np.square(a - b).sum()
-
-
-def distance_matrix(XX: np.ndarray, YY: np.ndarray):
-    distances = []
-    for x in XX:
-        for y in YY:
-            distances.append(squared_dist(x, y))
-    return np.array(distances).reshape(XX.shape[0], -1)
-
-
-def get_inertia(distances: np.ndarray,
-                labels: Union[List, np.ndarray],
-                n_samples: int):
-    ll = np.array(
-        [distances[i][labels[i]] for i in range(n_samples)])
-    return ll.sum()
-
-
-def run_kmeans(n_clusters: int,
-               X: np.ndarray,
-               init_centers: np.ndarray,
-               max_iteration,
-               verbose=False):
+def run_kmedians(n_clusters: int,
+                 X: np.ndarray,
+                 init_centers: np.ndarray,
+                 max_iteration,
+                 verbose=False):
     # Data
     n_samples, n_features = X.shape
     df = pd.DataFrame(X)
@@ -57,7 +34,7 @@ def run_kmeans(n_clusters: int,
         labels = np.array([np.argmin(sample) for sample in distances])
 
         df['labels'] = labels
-        new_centroids = df.groupby('labels').mean().values
+        new_centroids = df.groupby('labels').median().values
 
         # Get inertia
         inertia = get_inertia(distances, labels, n_samples)
@@ -76,11 +53,11 @@ def run_kmeans(n_clusters: int,
     return centers, labels, inertia
 
 
-def kmeans(n_clusters: int,
-           X: np.ndarray,
-           max_iteration=300,
-           n_attempt=10,
-           verbose=False):
+def kmedians(n_clusters: int,
+             X: np.ndarray,
+             max_iteration=300,
+             n_attempt=10,
+             verbose=False):
     # Data
     n_samples, n_features = X.shape
 
@@ -98,10 +75,10 @@ def kmeans(n_clusters: int,
         random_centroids = X[ii]
 
         # Run kmeans
-        centers, labels, inertia = run_kmeans(n_clusters, X,
-                                              random_centroids,
-                                              max_iteration,
-                                              verbose)
+        centers, labels, inertia = run_kmedians(n_clusters, X,
+                                                random_centroids,
+                                                max_iteration,
+                                                verbose)
 
         # Select best inertia
         if best_inertia is None or inertia < best_inertia:

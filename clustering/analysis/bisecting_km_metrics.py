@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 
 from clustering.analysis import definitions
 from clustering.path_definitions import PROCESSED_DATA_PATH, ROOT_PATH
-from clustering.cluster_algorithm.kmeans import kmeans
+from clustering.cluster_algorithm.bisecting_km import bisecting_kmeans
 from clustering.visualization import visualize
 
 
@@ -25,7 +25,7 @@ def hyperparameter_clustering(X: np.ndarray,
     for k in parameters['n_clusters']:
         # Perform clustering
         t0 = time()
-        algorithm_result = kmeans(n_clusters=k, X=X)
+        algorithm_result = bisecting_kmeans(n_clusters=k, X=X)
         tf = time() - t0
 
         # Save in a list
@@ -70,7 +70,8 @@ def get_metric_dataset(data_name: str,
     metric_df = pd.DataFrame(metric_data, columns=columns)
 
     if save:
-        metric_df.to_csv(PROCESSED_DATA_PATH / f'kmeans_results_{data_name}')
+        metric_df.to_csv(PROCESSED_DATA_PATH /
+                         f'bisecting_kmeans_results_{data_name}')
 
     return metric_df, global_time
 
@@ -101,11 +102,10 @@ if __name__ == '__main__':
         METRIC_DF, GLOBAL_TIME = get_metric_dataset(dataset_name, n_clusters)
 
         # Plots
-        title = 'kmeans'
+        title = 'bisecting_kmeans'
         raw_name = dataset_name.split('.')[0]
         fig = visualize.plot_internal_index(METRIC_DF,
                                             n_real_class,
                                             title)
         fig.savefig(PATH_REPORT_FIGURES /
                     f'{raw_name}_{title}.png')
-
