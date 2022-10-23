@@ -1,0 +1,4 @@
+,time,quantile,n_clusters,calinski,davies,silhouette,ARI,AMI,homo,compl,v-measure
+0,0.09747028350830078,0.3,1,,,,,,,,
+1,0.09357714653015137,0.4,1,,,,,,,,
+2,0.0866098403930664,0.5,1,,,,,,,,
