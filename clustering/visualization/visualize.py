@@ -1,5 +1,7 @@
 from typing import Optional
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 import pandas as pd
 
 
@@ -60,3 +62,14 @@ def plot_external_index(df: pd.DataFrame,
 
     return fig
 
+
+def plot_pca(reduced_data: np.ndarray,
+             y: np.ndarray):
+    fig = plt.figure()
+    sns.scatterplot(x=reduced_data[:, 0],
+                    y=reduced_data[:, 1],
+                    hue=y)
+    plt.ylabel('PCA2')
+    plt.xlabel('PCA1')
+
+    return fig
