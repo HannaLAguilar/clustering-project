@@ -1,7 +1,7 @@
 # Analysis
 
-Analyzing different cluster algorithms by changing their parameters and 
-quantifying performance with external and internal index metrics.
+Analyzing different cluster algorithms by modifying their parameters and 
+measuring performance with external and internal index metrics.
 
 ## Cluster Algorithms
 - Agglomerative algorithm

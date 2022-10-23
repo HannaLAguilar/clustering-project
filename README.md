@@ -3,8 +3,6 @@ Clustering
 
 Analyze the behavior of different clustering algorithms in 3 different data sets.
 
-
-
 # How to run
 
 - Create an environment and activate it:
@@ -24,7 +22,7 @@ Project Organization
     ├── data
     │   ├── processed      <- The final, canonical data sets for analysis.
     │   └── raw            <- The original, immutable data dump.
-    ││
+    │
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
     │   └── figures        <- Generated graphics and figures to be used in reporting
     │

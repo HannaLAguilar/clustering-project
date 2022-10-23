@@ -4,7 +4,7 @@ Preprocessing pipeline to go from raw data to processed data.
 Focus on transforming numerical data and categorical data,
 without removing outliers. 
 
-For this, these algorithms were implemented:
+To this end, these algorithms were implemented:
 
 ## Numerical data:
 
