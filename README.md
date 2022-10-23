@@ -43,18 +43,11 @@ Project Organization
     │   │   ├── kmeans.py
     │   │   └── kmedians.py
     │   │
-    │   ├── analysis    <- Scripts to analyze cluster metrics and plot and save figures 
-    │   │   │                 
-    │   │   ├── bisecting_km.py
-    │   │   ├── fuzzy_mean.py
-    │   │   ├── kmeans.py
-    │   │   └── kmedians.py
+    │   ├── analysis    <- Scripts to analyze cluster metrics and plot and save figures
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
     │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
-
 
 --------
 
