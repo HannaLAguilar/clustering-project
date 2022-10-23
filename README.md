@@ -34,7 +34,8 @@ Project Organization
     │   ├── __init__.py    <- Makes clustering a Python module
     │   │
     │   ├── get_data       <- Scripts  to preprocessing data
-    │   │   └── preprocessing.py
+    │   │   │ 
+    │   │   ├── preprocessing.py
     │   │   ├── data_pca_figures.py
     │   │
     │   ├── cluster_algorithm    <- Scripts to cluster algorithms from scratch 
@@ -45,6 +46,15 @@ Project Organization
     │   │   └── kmedians.py
     │   │
     │   ├── analysis    <- Scripts to analyze cluster metrics and plot and save figures
+    │   │   │ 
+    │   │   ├── agglomerative_figures.py
+    │   │   ├── agglomerative_metrics.py
+    │   │   ├── bisecting_km_metrics.py
+    │   │   ├── definitions.py
+    │   │   ├── fcm_metrics.py
+    │   │   ├── kmeans_metrics.py
+    │   │   ├── kmedians_metrics.py
+    │   │   └── mean_shift_metrics.py
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
