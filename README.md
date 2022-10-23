@@ -39,7 +39,7 @@ Project Organization
     │   ├── cluster_algorithm    <- Scripts to cluster algorithms from scratch 
     │   │   │                 
     │   │   ├── bisecting_km.py
-    │   │   ├── fuzzy_mean.py
+    │   │   ├── fcm.py
     │   │   ├── kmeans.py
     │   │   └── kmedians.py
     │   │
