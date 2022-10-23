@@ -3,8 +3,6 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
-from sklearn.preprocessing import LabelEncoder
-
 from clustering.analysis import definitions
 from clustering.path_definitions import PROCESSED_DATA_PATH, ROOT_PATH
 from clustering.cluster_algorithm.kmeans import kmeans
@@ -12,7 +10,7 @@ from clustering.visualization import visualize
 
 
 def hyperparameter_clustering(X: np.ndarray,
-                              y_true_num: np.ndarray,
+                              y_true: pd.Series,
                               parameters: Dict,
                               internal_metrics: Dict =
                               definitions.INTERNAL_METRICS.values(),
@@ -36,7 +34,7 @@ def hyperparameter_clustering(X: np.ndarray,
                    for m in internal_metrics]
 
         # External index metrics
-        result += [m(y_true_num, algorithm_result.labels)
+        result += [m(y_true, algorithm_result.labels)
                    for m in external_metrics]
         da.append(result)
 
@@ -53,14 +51,12 @@ def get_metric_dataset(data_name: str,
     df = pd.read_csv(path, index_col=0)
     X = df.iloc[:, :-1].values
     y_true = df['y_true']
-    le = LabelEncoder().fit(y_true.values)
-    y_true_num = le.transform(y_true)
 
     # Parameters for cluster
     params = {'n_clusters': n_clusters}
 
     # Perform sensitive analysis
-    da = hyperparameter_clustering(X, y_true_num, params)
+    da = hyperparameter_clustering(X, y_true, params)
     metric_data, global_time = da
     columns = ['n_clusters', 'time', 'inertia']
     columns = columns + list(definitions.INTERNAL_METRICS.keys()) + list(

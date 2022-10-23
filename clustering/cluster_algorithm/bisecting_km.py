@@ -82,9 +82,9 @@ def bisecting_kmeans(n_clusters: int,
                    inertia=inertia)
 
 
-dff = pd.read_csv(PROCESSED_DATA_PATH / 'iris.csv', index_col=0)
-XX_df = dff.iloc[:, :-1]
-K = 5
-d = {}
-
-a = bisecting_kmeans(K, XX_df)
+# dff = pd.read_csv(PROCESSED_DATA_PATH / 'iris.csv', index_col=0)
+# XX_df = dff.iloc[:, :-1]
+# K = 5
+# d = {}
+#
+# a = bisecting_kmeans(K, XX_df)

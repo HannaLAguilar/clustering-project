@@ -3,16 +3,14 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
-from sklearn.preprocessing import LabelEncoder
-
 from clustering.analysis import definitions
 from clustering.path_definitions import PROCESSED_DATA_PATH, ROOT_PATH
 from clustering.cluster_algorithm.bisecting_km import bisecting_kmeans
 from clustering.visualization import visualize
 
 
-def hyperparameter_clustering(X: np.ndarray,
-                              y_true_num: np.ndarray,
+def hyperparameter_clustering(X_df: np.ndarray,
+                              y_true: pd.Series,
                               parameters: Dict,
                               internal_metrics: Dict =
                               definitions.INTERNAL_METRICS.values(),
@@ -25,18 +23,19 @@ def hyperparameter_clustering(X: np.ndarray,
     for k in parameters['n_clusters']:
         # Perform clustering
         t0 = time()
-        algorithm_result = bisecting_kmeans(n_clusters=k, X=X)
+        algorithm_result = bisecting_kmeans(n_clusters=k,
+                                            X_df=X_df)
         tf = time() - t0
 
         # Save in a list
         result = [k, tf, algorithm_result.inertia]
 
         # Internal index metrics
-        result += [m(X, algorithm_result.labels)
+        result += [m(X_df.values, algorithm_result.labels)
                    for m in internal_metrics]
 
         # External index metrics
-        result += [m(y_true_num, algorithm_result.labels)
+        result += [m(y_true, algorithm_result.labels)
                    for m in external_metrics]
         da.append(result)
 
@@ -51,16 +50,14 @@ def get_metric_dataset(data_name: str,
     # Data
     path = PROCESSED_DATA_PATH / data_name
     df = pd.read_csv(path, index_col=0)
-    X = df.iloc[:, :-1].values
+    X_df = df.iloc[:, :-1]
     y_true = df['y_true']
-    le = LabelEncoder().fit(y_true.values)
-    y_true_num = le.transform(y_true)
 
     # Parameters for cluster
     params = {'n_clusters': n_clusters}
 
     # Perform sensitive analysis
-    da = hyperparameter_clustering(X, y_true_num, params)
+    da = hyperparameter_clustering(X_df, y_true, params)
     metric_data, global_time = da
     columns = ['n_clusters', 'time', 'inertia']
     columns = columns + list(definitions.INTERNAL_METRICS.keys()) + list(

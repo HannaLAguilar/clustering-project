@@ -30,3 +30,11 @@ def plot_internal_index(df: pd.DataFrame,
     fig.tight_layout()
     return fig
 
+
+def plot_inertial():
+    pass
+
+
+def plot_external_index():
+    pass
+
