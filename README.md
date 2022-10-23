@@ -3,6 +3,19 @@ Clustering
 
 Analyze the behavior of different clustering algorithms in 3 different data sets.
 
+
+
+# How to run
+
+- Create an environment and activate it:
+ ```
+conda create --name iml_py37 python=3.7
+conda activate iml_py37
+conda install -c anaconda pip
+pip install -r requirements.txt
+ ```
+
+
 Project Organization
 ------------
 
