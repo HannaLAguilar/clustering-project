@@ -30,6 +30,10 @@ def remove_predicted_value(df: pd.DataFrame) -> pd.DataFrame:
     return df.iloc[:, :-1]
 
 
+def get_predicted_value(df: pd.DataFrame) -> pd.DataFrame:
+    return df.iloc[:, -1]
+
+
 def check_null_values(df: pd.DataFrame) -> pd.Series:
     return df.isnull().sum()
 
@@ -85,6 +89,7 @@ def preprocessing(data_name: str, save: bool = True) -> pd.DataFrame:
     print(f'---Preprocessing {data_name} dataset---')
     data_path = RAW_DATA_PATH / data_name
     df, meta = import_data(data_path)
+    y_true = get_predicted_value(df)
     df = remove_predicted_value(df)
     nulls = check_null_values(df)
     if nulls.sum() != 0:
@@ -92,6 +97,7 @@ def preprocessing(data_name: str, save: bool = True) -> pd.DataFrame:
     else:
         print(f'Nan values: 0')
     process_df = standardization(df)
+    process_df['y_true'] = y_true
 
     # Save
     if save:
@@ -101,5 +107,8 @@ def preprocessing(data_name: str, save: bool = True) -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    DATASET_PATH = ['mushroom.arff', 'vowel.arff', 'pen-based.arff', ]
-    PROCESSED_DATASETS = [preprocessing(name) for name in DATASET_PATH]
+    DATASET_NAME = ['iris.arff',
+                    'vowel.arff',
+                    'pen-based.arff',
+                    'cmc.arff']
+    PROCESSED_DATASETS = [preprocessing(name) for name in DATASET_NAME]
