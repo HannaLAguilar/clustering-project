@@ -101,8 +101,20 @@ if __name__ == '__main__':
         # Plots
         title = 'bisecting_kmeans'
         raw_name = dataset_name.split('.')[0]
-        fig = visualize.plot_internal_index(METRIC_DF,
-                                            n_real_class,
-                                            title)
-        fig.savefig(PATH_REPORT_FIGURES /
-                    f'{raw_name}_{title}.png')
+
+        # METRIC_DF = pd.read_csv(PROCESSED_DATA_PATH /
+        #                         f'{title}_results_{dataset_name}',
+        #                         index_col=0)
+
+        # Internal
+        fig1 = visualize.plot_internal_index(METRIC_DF,
+                                             n_real_class,
+                                             title)
+        fig1.savefig(PATH_REPORT_FIGURES /
+                     f'{raw_name}_internal_{title}.png')
+
+        # External index
+        fig2 = visualize.plot_external_index(METRIC_DF,
+                                             title)
+        fig2.savefig(PATH_REPORT_FIGURES /
+                     f'{raw_name}_external_{title}.png')

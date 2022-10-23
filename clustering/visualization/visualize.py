@@ -1,21 +1,26 @@
-from typing import List, Optional, Dict, Tuple, Union
-import numpy as np
+from typing import Optional
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 
 
 def plot_internal_index(df: pd.DataFrame,
                         k_real: int,
                         title: Optional[str] = None):
     n_clusters = df['n_clusters']
-    internal_indexs = ['calinski', 'davies', 'silhouette']
-    ylbales = ['Calinski-Harabasz', 'Davies&-Bouldin', 'Silhouette']
 
-    fig, axs = plt.subplots(1, 3, figsize=(13, 4))
+    if 'inertia' in df.columns:
+        internal_indexs = ['inertia', 'calinski', 'davies', 'silhouette']
+        ylbales = ['Inertia', 'Calinski-Harabasz',
+                   'Davies&-Bouldin', 'Silhouette']
+        fig, axs = plt.subplots(1, 4, figsize=(16, 4))
+
+    else:
+        internal_indexs = ['calinski', 'davies', 'silhouette']
+        ylbales = ['Calinski-Harabasz', 'Davies&-Bouldin', 'Silhouette']
+        fig, axs = plt.subplots(1, 3, figsize=(13, 4))
+
     axs = axs.flatten()
     fig.suptitle(title)
-
     for i, ii_index in enumerate(internal_indexs):
         axs[i].plot(n_clusters,
                     df[ii_index],
@@ -31,10 +36,30 @@ def plot_internal_index(df: pd.DataFrame,
     return fig
 
 
-def plot_inertial():
-    pass
+def plot_external_index(df: pd.DataFrame,
+                        title: Optional[str] = None):
+    n_clusters = df['n_clusters']
+    external_indexs = ['ARI', 'AMI', 'homo', 'compl', 'v-measure']
+    ylabels = ['Adjusted Rand-Index',
+               'Adjusted Mutual',
+               'Homogeneity',
+               'Completeness',
+               'V-measure']
 
+    fixed_cols = ['n_clusters']
+    selected_columns = fixed_cols + external_indexs
+    new_df = df[selected_columns]
+    new_df.columns = fixed_cols + ylabels
 
-def plot_external_index():
-    pass
+    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(15, 5))
+    fig.suptitle(title)
+    new_df.plot.bar(x='n_clusters', rot=0, alpha=0.8, ax=ax0)
+    df.plot.bar(x='n_clusters', y='time', rot=0, alpha=0.8, ax=ax1)
+    ax0.set_ylabel('n cluster')
+    ax0.legend(loc='best')
+    ax0.set_xlabel('External index')
+    ax1.set_xlabel('Clustering time (s)')
+    fig.tight_layout()
+
+    return fig
 
