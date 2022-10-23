@@ -52,9 +52,9 @@ def initial_u(c, n):
 
 
 def update_centers(mem_matrix, data, m, c, p):
-    denom_vals = np.zeros(len(mem_matrix)) # calculate a denominator for each cluster
-
+    '''updates matrix of cluster centers'''
     # calculate the denominator of Cluster Equation
+    denom_vals = np.zeros(len(mem_matrix))
     for i in range(len(mem_matrix)):
         for j in range(len(mem_matrix[0])):
             squared_val = mem_matrix[i][j] ** m
@@ -62,7 +62,6 @@ def update_centers(mem_matrix, data, m, c, p):
 
     #  sum each element column-wise per cluster -- this will give the numerator for that cluster/feature pair
     #  and then divide that by the denom_values number for the cluster -- this will give the cluster center value
-    #  I think this should be an array of size c x p
     numerators = []
     for cluster in range(c):
         numer_sums = np.zeros(p)
@@ -93,6 +92,8 @@ def update_u_matrix(distance_matrix, mem_matrix):
 
 
 def FCM(data, c, m, num_iters, term_threshold, limit):
+    '''computes Fuzzy C-Means for specified dataset and parameters
+    -- returns matrix of cluster centers and final cluster assignments'''
     n = data.shape[0]
     p = data.shape[1]
     iter = 0
