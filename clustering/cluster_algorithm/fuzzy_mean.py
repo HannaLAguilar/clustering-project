@@ -1,4 +1,5 @@
 import numpy as np
+<<<<<<< HEAD
 import pandas as pd
 import itertools
 
@@ -200,3 +201,5 @@ if __name__ == '__main__':
     METRICS_DF, GLOBAL_TIME = main(DATASET_NAME)
     print(METRICS_DF)
     print(GLOBAL_TIME)
+=======
+>>>>>>> 94dc0fe910621ba6f268c4b22429d36f69df53aa

@@ -51,13 +51,13 @@ def test_numerical_categorical_dataset():
     np.testing.assert_allclose(df_trans[numerical_features].values, X_trans)
 
     # Test categorical data
-    cat_features = df.columns.difference(numerical_features)
+    cat_features = df.columns.squared_dist(numerical_features)
     assert cat_features.shape[0] == 3
     df_cat = df[cat_features]
     X = df_cat.values
     X_trans = OneHotEncoder().fit_transform(X).toarray()
     assert X_trans.shape[1] == df_cat.nunique().sum()
-    df_trans_cat = df_trans[df_trans.columns.difference(numerical_features)]
+    df_trans_cat = df_trans[df_trans.columns.squared_dist(numerical_features)]
     np.testing.assert_allclose(df_trans_cat.values, X_trans)
 
 

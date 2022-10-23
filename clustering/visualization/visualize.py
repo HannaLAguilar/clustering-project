@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from typing import List, Optional, Dict, Tuple, Union
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,11 +6,18 @@ import pandas as pd
 import seaborn as sns
 
 from itertools import cycle
+=======
+from typing import Optional
+import matplotlib.pyplot as plt
+import pandas as pd
+
+>>>>>>> 94dc0fe910621ba6f268c4b22429d36f69df53aa
 
 def plot_internal_index(df: pd.DataFrame,
                         k_real: int,
                         title: Optional[str] = None):
     n_clusters = df['n_clusters']
+<<<<<<< HEAD
     internal_indexs = ['calinski', 'davies', 'silhouette']
     ylbales = ['Calinski-Harabasz', 'Davies&-Bouldin', 'Silhouette']
 
@@ -17,6 +25,22 @@ def plot_internal_index(df: pd.DataFrame,
     axs = axs.flatten()
     fig.suptitle(title)
 
+=======
+
+    if 'inertia' in df.columns:
+        internal_indexs = ['inertia', 'calinski', 'davies', 'silhouette']
+        ylbales = ['Inertia', 'Calinski-Harabasz',
+                   'Davies&-Bouldin', 'Silhouette']
+        fig, axs = plt.subplots(1, 4, figsize=(16, 4))
+
+    else:
+        internal_indexs = ['calinski', 'davies', 'silhouette']
+        ylbales = ['Calinski-Harabasz', 'Davies&-Bouldin', 'Silhouette']
+        fig, axs = plt.subplots(1, 3, figsize=(13, 4))
+
+    axs = axs.flatten()
+    fig.suptitle(title)
+>>>>>>> 94dc0fe910621ba6f268c4b22429d36f69df53aa
     for i, ii_index in enumerate(internal_indexs):
         axs[i].plot(n_clusters,
                     df[ii_index],
@@ -31,6 +55,7 @@ def plot_internal_index(df: pd.DataFrame,
     fig.tight_layout()
     return fig
 
+<<<<<<< HEAD
 def visualize_clustering(X, n_clusters, cluster_centers, labels):
     plt.figure(1)
     plt.clf()
@@ -50,3 +75,30 @@ def visualize_clustering(X, n_clusters, cluster_centers, labels):
         )
     plt.title("Estimated number of clusters: %d" % n_clusters)
     plt.show()
+=======
+
+def plot_external_index(df: pd.DataFrame,
+                        title: Optional[str] = None):
+    external_indexs = ['ARI', 'AMI', 'homo', 'compl', 'v-measure']
+    ylabels = ['Adjusted Rand-Index',
+               'Adjusted Mutual',
+               'Homogeneity',
+               'Completeness',
+               'V-measure']
+
+    fixed_cols = ['n_clusters']
+    selected_columns = fixed_cols + external_indexs
+    new_df = df[selected_columns]
+    new_df.columns = fixed_cols + ylabels
+
+    fig, ax0 = plt.subplots(1, 1, figsize=(10, 5))
+    fig.suptitle(title)
+    new_df.plot.bar(x='n_clusters', rot=0, alpha=0.8, ax=ax0)
+    ax0.set_xlabel('n cluster')
+    ax0.legend(loc='best')
+    ax0.set_ylabel('External index')
+    fig.tight_layout()
+
+    return fig
+
+>>>>>>> 94dc0fe910621ba6f268c4b22429d36f69df53aa
