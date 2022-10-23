@@ -38,7 +38,6 @@ def plot_internal_index(df: pd.DataFrame,
 
 def plot_external_index(df: pd.DataFrame,
                         title: Optional[str] = None):
-
     external_indexs = ['ARI', 'AMI', 'homo', 'compl', 'v-measure']
     ylabels = ['Adjusted Rand-Index',
                'Adjusted Mutual',
@@ -51,14 +50,12 @@ def plot_external_index(df: pd.DataFrame,
     new_df = df[selected_columns]
     new_df.columns = fixed_cols + ylabels
 
-    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(15, 5))
+    fig, ax0 = plt.subplots(1, 1, figsize=(10, 5))
     fig.suptitle(title)
     new_df.plot.bar(x='n_clusters', rot=0, alpha=0.8, ax=ax0)
-    df.plot.bar(x='n_clusters', y='time', rot=0, alpha=0.8, ax=ax1)
-    ax0.set_ylabel('n cluster')
+    ax0.set_xlabel('n cluster')
     ax0.legend(loc='best')
-    ax0.set_xlabel('External index')
-    ax1.set_xlabel('Clustering time (s)')
+    ax0.set_ylabel('External index')
     fig.tight_layout()
 
     return fig
