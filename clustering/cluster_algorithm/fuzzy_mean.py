@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
 
-import sys
-sys.path.append('C:/Users/lgtuc/OneDrive/Documents/School/Masters/1st Semester/UB - Intro to Machine Learning/Clustering-Project')
+
 
 from clustering.path_definitions import PROCESSED_DATA_PATH
 
